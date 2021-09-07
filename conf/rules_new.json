@@ -6,18 +6,19 @@
       "cde": ["patient_id","age"],
       "kde": ["country","state"],
       "run_rules_on": ["cde","kde"],
-      "profiler_rules": {
-        "patient_id": [ "completeness", "distinctness", "uniqueness" ],
+      "single_column_profiler_rules": {
+        "patient_id": [ "Completeness", "CountDistinct","Distinctness","Uniqueness", "Size" ],
         "age": [ "completeness", "distinctness", "uniqueness" ],
         "country": [ "completeness", "distinctness", "uniqueness" ],
         "state": [ "completeness", "distinctness", "uniqueness" ]
       },
+      "cross_column_profiler_rules": {},
       "single_column_validation_rules" : {
         "patient_id" : [
           {
             "rule_specification": "patient_id has null",
             "rule_name": "patient_id_isnull",
-            "rule": "isnull(patient_id)"
+            "rule": "patient_id is not null",
           }
         ],
         "country" : [

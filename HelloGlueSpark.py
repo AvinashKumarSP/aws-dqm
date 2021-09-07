@@ -47,11 +47,11 @@ if __name__ == "__main__":
         "profiler_rules": [
         {
             "rule_name": "completeness",
-            "on_columns": ["patient_id","Age","Country","state"]
+            "on_columns": ["patient_id","Age","country","state"]
         },
         {
             "rule_name": "distinctness",
-            "on_columns": ["patient_id","Age","Country","state"]
+            "on_columns": ["patient_id","Age","country","state"]
         }
     ]
     }
@@ -74,9 +74,13 @@ if __name__ == "__main__":
     analysisResult = AnalysisRunner(spark) \
         .onData(partitioned_survey_df) \
         .addAnalyzer(Size()) \
+        .addAnalyzer(Distinctness("patient_id"))\
         .addAnalyzer(completeness("patient_id")) \
-        .addAnalyzer(Compliance("CHI equality check", "GP1_CHI==GP2_CHI")) \
+        .addAnalyzer(Uniqueness(["patient_id"])) \
+        .addAnalyzer(Compliance("country_validity", "country in ('United States','United Kingdom')")) \
+        .addAnalyzer(Compliance("patient_id_completeness", "patient_id is not null")) \
         .run()
+
 
     analysisResult_df = AnalyzerContext.successMetricsAsDataFrame(spark, analysisResult).withColumn("table", lit("patient_data"))
     analysisResult_df.show()
