@@ -1,0 +1,36 @@
+{
+  "source" : "nhs",
+  "entities": [
+    {
+      "entity": "patient",
+      "cde": ["patient_id","age"],
+      "kde": ["country","state"],
+      "run_rules_on": ["cde","kde"],
+      "profiler_rules": {
+        "patient_id": [ "completeness", "distinctness", "uniqueness" ],
+        "age": [ "completeness", "distinctness", "uniqueness" ],
+        "country": [ "completeness", "distinctness", "uniqueness" ],
+        "state": [ "completeness", "distinctness", "uniqueness" ]
+      },
+      "single_column_validation_rules" : {
+        "patient_id" : [
+          {
+            "rule_specification": "patient_id has null",
+            "rule_name": "patient_id_isnull",
+            "rule": "isnull(patient_id)"
+          }
+        ],
+        "country" : [
+          {
+            "rule_specification": "Country has ['United States','United Kingdom']",
+            "rule_name": "country_has",
+            "rule": "country in('United States','United Kingdom')"
+          }
+        ]
+      },
+      "cross_column_validation_rules" : {},
+      "cross_dataset_validation_rules": {}
+    }
+  ]
+
+}
