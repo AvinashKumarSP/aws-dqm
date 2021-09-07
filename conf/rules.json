@@ -1,0 +1,70 @@
+{
+  "source" : "crm",
+  "entities": [
+
+    {
+      "entity": "patient",
+      "cde": ["patient_id","Age"],
+      "kde": ["Country","state"],
+      "run_rules_on": ["cde","kde"],
+      "profiler_rules": {
+          "cde": [
+                  {
+                    "rule_name": "completeness",
+                    "on_columns": ["patient_id","Age","Country","state"]
+                  },
+                  {
+                    "rule_name": "distinctness",
+                    "on_columns": ["patient_id","Age","Country","state"]
+                  },
+                  {
+                    "rule_name": "uniqueness",
+                    "on_columns": ["patient_id","Age","Country","state"]
+                  }
+                ],
+          "kde": [
+                  {
+                    "rule_name": "completeness",
+                    "on_columns": ["patient_id","Age","Country","state"]
+                  },
+                  {
+                    "rule_name": "distinctness",
+                    "on_columns": ["patient_id","Age","Country","state"]
+                  },
+                  {
+                    "rule_name": "uniqueness",
+                    "on_columns": ["patient_id","Age","Country","state"]
+                  }
+                ]
+      },
+      "validation_rules" : {
+          "cde": [
+                  {
+                    "rule_specification": "patient_id has null",
+                    "rule_name": "patient_id_isnull",
+                    "rule": "isnull(patient_id)",
+                  },
+                  {
+                    "rule_specification": "Country has ['United States','United Kingdom']",
+                    "rule_name": "country_has",
+                    "rule": "Country in('United States','United Kingdom')",
+                  }
+                ],
+          "kde": [
+                  {
+                    "rule_specification": "patient_id has null",
+                    "rule_name": "patient_id_isnull",
+                    "rule": "isnull(patient_id)",
+                  },
+                  {
+                    "rule_specification": "Country has ['United States','United Kingdom']",
+                    "rule_name": "country_has",
+                    "rule": "Country in('United States','United Kingdom')",
+                  }
+                ]
+      }
+    }
+
+  ]
+
+}
