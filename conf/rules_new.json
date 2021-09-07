@@ -7,10 +7,28 @@
       "kde": ["country","state"],
       "run_rules_on": ["cde","kde"],
       "single_column_profiler_rules": {
-        "patient_id": [ "Completeness", "CountDistinct","Distinctness","Uniqueness", "Size" ],
-        "age": [ "completeness", "distinctness", "uniqueness" ],
-        "country": [ "completeness", "distinctness", "uniqueness" ],
-        "state": [ "completeness", "distinctness", "uniqueness" ]
+        "patient_id": [ { "dimension": "Completeness" },
+          {"dimension": "CountDistinct"},
+          {"dimension": "Distinctness"},
+          {"dimension": "Uniqueness"},
+          {"dimension": "Size"}
+        ],
+        "age": [ { "dimension": "Completeness" },
+          {"dimension": "CountDistinct"},
+          {"dimension": "Distinctness"},
+          {"dimension": "Uniqueness"}
+        ],
+        "country": [ { "dimension": "Completeness" },
+          {"dimension": "CountDistinct"},
+          {"dimension": "Distinctness"},
+          {"dimension": "Uniqueness"},
+          {"dimension": "Compliance", "dimension_instance": "country_has", "dimension_rule": "country in ('United States','United Kingdom')"}
+        ],
+        "state": [  {"dimension": "Completeness" },
+          {"dimension": "CountDistinct"},
+          {"dimension": "Distinctness"},
+          {"dimension": "Uniqueness"}
+        ]
       },
       "cross_column_profiler_rules": {},
       "single_column_validation_rules" : {
@@ -25,7 +43,7 @@
           {
             "rule_specification": "Country has ['United States','United Kingdom']",
             "rule_name": "country_has",
-            "rule": "country in('United States','United Kingdom')"
+            "rule": "country in ('United States','United Kingdom')"
           }
         ]
       },

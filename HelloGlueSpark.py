@@ -11,7 +11,6 @@ from pydeequ.analyzers import *
 from pydeequ.profiles import *
 from pydeequ.suggestions import *
 
-
 if __name__ == "__main__":
     conf = get_spark_app_config()
 
@@ -34,33 +33,34 @@ if __name__ == "__main__":
     survey_raw_df = load_survey_df(spark, sys.argv[1])
     partitioned_survey_df = survey_raw_df.repartition(2)
     partitioned_survey_df.show()
-    rule="isnull(patient_id)"
-    test_list=["patient_id","Country"]
-    rule_df = partitioned_survey_df.select(test_list).withColumn("length_of_patient_id_gt_0", expr("Country in('United States','United Kingdom')"))
+    rule = "isnull(patient_id)"
+    test_list = ["patient_id", "Country"]
+    rule_df = partitioned_survey_df.select(test_list).withColumn("length_of_patient_id_gt_0",
+                                                                 expr("Country in('United States','United Kingdom')"))
     rule_df.show()
     deequ_profiler_dict = {"completeness": Completeness,
                            "distinctness": Distinctness,
                            "max_length": MaxLength,
                            "min_length": MinLength,
                            "uniqueness": Uniqueness}
-    rules={
+    rules = {
         "profiler_rules": [
-        {
-            "rule_name": "completeness",
-            "on_columns": ["patient_id","Age","country","state"]
-        },
-        {
-            "rule_name": "distinctness",
-            "on_columns": ["patient_id","Age","country","state"]
-        }
-    ]
+            {
+                "rule_name": "completeness",
+                "on_columns": ["patient_id", "age", "country", "state"]
+            },
+            {
+                "rule_name": "distinctness",
+                "on_columns": ["patient_id", "age", "country", "state"]
+            }
+        ]
     }
-    rules_list=rules['profiler_rules']
-    rules_list1 ={c['rule_name'] : c['on_columns'] for c in rules_list}
+    rules_list = rules['profiler_rules']
+    rules_list1 = {c['rule_name']: c['on_columns'] for c in rules_list}
     analysisResult1 = AnalysisRunner(spark) \
         .onData(partitioned_survey_df)
     for key, values in rules_list1.items():
-        print(key,values)
+        print(key, values)
         deequ_func = deequ_profiler_dict[key]
         print(deequ_func)
         for column in values:
@@ -74,15 +74,15 @@ if __name__ == "__main__":
     analysisResult = AnalysisRunner(spark) \
         .onData(partitioned_survey_df) \
         .addAnalyzer(Size()) \
-        .addAnalyzer(Distinctness("patient_id"))\
+        .addAnalyzer(Distinctness("patient_id")) \
         .addAnalyzer(completeness("patient_id")) \
         .addAnalyzer(Uniqueness(["patient_id"])) \
         .addAnalyzer(Compliance("country_validity", "country in ('United States','United Kingdom')")) \
         .addAnalyzer(Compliance("patient_id_completeness", "patient_id is not null")) \
         .run()
 
-
-    analysisResult_df = AnalyzerContext.successMetricsAsDataFrame(spark, analysisResult).withColumn("table", lit("patient_data"))
+    analysisResult_df = AnalyzerContext.successMetricsAsDataFrame(spark, analysisResult).withColumn("table",
+                                                                                                    lit("patient_data"))
     analysisResult_df.show()
 
     suggestionResult = ConstraintSuggestionRunner(spark) \
@@ -90,7 +90,24 @@ if __name__ == "__main__":
         .addConstraintRule(DEFAULT()) \
         .run()
     # Constraint Suggestions in JSON format
+    from pydeequ.checks import *
+    from pydeequ.verification import *
 
-    print(suggestionResult)
+    check = Check(spark, CheckLevel.Warning, "Patient Data Check")
+    checkResult = VerificationSuite(spark) \
+        .onData(partitioned_survey_df) \
+        .addCheck(
+        check.hasSize(lambda x: x >= 3000000) \
+            .hasMin("star_rating", lambda x: x == 1.0) \
+            .hasMax("star_rating", lambda x: x == 5.0) \
+            .isComplete("review_id") \
+            .isUnique("review_id") \
+            .isComplete("marketplace") \
+            .isContainedIn("marketplace", ["US", "UK", "DE", "JP", "FR"]) \
+            .isNonNegative("year")) \
+        .run()
+
+    checkResult_df = VerificationResult.checkResultsAsDataFrame(spark, checkResult)
+    checkResult_df.show()
     logger.info("Finished HelloSpark")
     spark.stop()
