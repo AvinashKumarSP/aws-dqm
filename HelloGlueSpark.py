@@ -11,6 +11,27 @@ from pydeequ.analyzers import *
 from pydeequ.profiles import *
 from pydeequ.suggestions import *
 
+
+def gt(n):
+    return lambda x: x > n
+
+
+def lt(n):
+    return lambda x: x < n
+
+
+def eq(n):
+    return lambda x: x == n
+
+
+def ge(n):
+    return lambda x: x >= n
+
+
+def le(n):
+    return lambda x: x <= n
+
+
 if __name__ == "__main__":
     conf = get_spark_app_config()
 
@@ -35,9 +56,11 @@ if __name__ == "__main__":
     partitioned_survey_df.show()
     rule = "isnull(patient_id)"
     test_list = ["patient_id", "Country"]
-    rule_df = partitioned_survey_df.select(test_list).withColumn("length_of_patient_id_gt_0",
+    rule_df = partitioned_survey_df.select(test_list).withColumn("length_of_country_id_gt_0",
                                                                  expr("Country in('United States','United Kingdom')"))
     rule_df.show()
+
+    new_req_rules_df = partitioned_survey_df.select(test_list).withColumn("validation_results", )
     deequ_profiler_dict = {"completeness": Completeness,
                            "distinctness": Distinctness,
                            "max_length": MaxLength,
@@ -93,21 +116,24 @@ if __name__ == "__main__":
     from pydeequ.checks import *
     from pydeequ.verification import *
 
-    check = Check(spark, CheckLevel.Warning, "Patient Data Check")
+    check = Check(spark, CheckLevel.Error, "Patient Data Check")
+    check1 = Check(spark, CheckLevel.Error, "Patient Data Check1")
+
     checkResult = VerificationSuite(spark) \
         .onData(partitioned_survey_df) \
         .addCheck(
-        check.hasSize(lambda x: x >= 3000000) \
-            .hasMin("star_rating", lambda x: x == 1.0) \
-            .hasMax("star_rating", lambda x: x == 5.0) \
-            .isComplete("review_id") \
-            .isUnique("review_id") \
-            .isComplete("marketplace") \
-            .isContainedIn("marketplace", ["US", "UK", "DE", "JP", "FR"]) \
-            .isNonNegative("year")) \
+        check.__getattribute__("hasSize")(lambda x: x >= 15, "Failed due to more than expected record count")
+            .__getattribute__("isComplete")("patient_id")
+            .hasSize(ge(8))
+            .isUnique("patient_id")
+            .isComplete("country")
+            .__getattribute__("hasCompleteness")('patient_id', gt(0.9)) \
+            .satisfies("country in ('United States','United Kingdom')", "country_has", lambda x: x >= 0.9, None)
+            .isContainedIn("country", ["United States", "United Kingdom"])) \
         .run()
 
     checkResult_df = VerificationResult.checkResultsAsDataFrame(spark, checkResult)
-    checkResult_df.show()
+    checkResult_df.show(truncate=False)
+
     logger.info("Finished HelloSpark")
     spark.stop()

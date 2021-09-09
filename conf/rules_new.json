@@ -37,13 +37,15 @@
             "rule_specification": "patient_id has null",
             "rule_name": "patient_id_isnull",
             "rule": "patient_id is not null",
+            "is_active": 1
           }
         ],
         "country" : [
           {
             "rule_specification": "Country has ['United States','United Kingdom']",
             "rule_name": "country_has",
-            "rule": "country in ('United States','United Kingdom')"
+            "rule": "country in ('United States','United Kingdom')",
+            "is_active": 1
           }
         ]
       },
