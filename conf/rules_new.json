@@ -6,28 +6,48 @@
       "cde": ["patient_id","age"],
       "kde": ["country","state"],
       "run_rules_on": ["cde","kde"],
+      "primary_key" : "patient_id",
+      "dataset_level_validation_rules" : [
+        {
+          "rule_name": "record_cpunt",
+          "rule": "hasSize",
+          "is_active": 1,
+          "check_level": "Error",
+          "service_level_objective": "gt(8)"
+        }
+      ],
       "single_column_profiler_rules": {
-        "patient_id": [ { "dimension": "Completeness" },
-          {"dimension": "CountDistinct"},
-          {"dimension": "Distinctness"},
-          {"dimension": "Uniqueness"},
-          {"dimension": "Size"}
+        "patient_id": [ { "dimension": "Completeness",
+            "is_active": 1,
+            "check_level": "Error"
+        },
+          {"dimension": "CountDistinct",
+            "is_active": 1},
+          {"dimension": "Distinctness",
+            "is_active": 1}
         ],
-        "age": [ { "dimension": "Completeness" },
-          {"dimension": "CountDistinct"},
-          {"dimension": "Distinctness"},
-          {"dimension": "Uniqueness"}
+        "age": [ { "dimension": "Completeness" ,
+          "is_active": 1},
+          {"dimension": "CountDistinct",
+            "is_active": 1},
+          {"dimension": "Distinctness",
+            "is_active": 1}
         ],
-        "country": [ { "dimension": "Completeness" },
-          {"dimension": "CountDistinct"},
+        "country": [ { "dimension": "Completeness" ,
+          "is_active": 1},
+          {"dimension": "CountDistinct",
+            "is_active": 1},
           {"dimension": "Distinctness"},
-          {"dimension": "Uniqueness"},
-          {"dimension": "Compliance", "dimension_instance": "country_has", "dimension_rule": "country in ('United States','United Kingdom')"}
+          "is_active": 1},
+          {"dimension": "Compliance", "dimension_instance": "country_has", "dimension_rule": "country in ('United States','United Kingdom')",
+            "is_active": 1}
         ],
-        "state": [  {"dimension": "Completeness" },
-          {"dimension": "CountDistinct"},
-          {"dimension": "Distinctness"},
-          {"dimension": "Uniqueness"}
+        "state": [  {"dimension": "Completeness" ,
+          "is_active": 1},
+          {"dimension": "CountDistinct",
+            "is_active": 1},
+          {"dimension": "Distinctness",
+            "is_active": 1}
         ]
       },
       "cross_column_profiler_rules": {},
