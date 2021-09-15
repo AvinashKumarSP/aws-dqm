@@ -58,7 +58,7 @@ if __name__ == "__main__":
     test_list = ["patient_id", "Country"]
     rule_df = partitioned_survey_df.select(test_list).withColumn("length_of_country_id_gt_0",
                                                                  expr("Country in('United States','United Kingdom')"))
-    #rule_df.show()
+    rule_df.show()
 
     new_req_rules_df = partitioned_survey_df.select(test_list)
     deequ_profiler_dict = {"completeness": Completeness,
