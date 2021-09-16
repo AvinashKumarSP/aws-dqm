@@ -44,7 +44,17 @@ dq_rule = {
                 "rule_specification": "Null Check",
                 "rule_name": "patient_id_not_null",
                 "rule": "patient_id is not null",
+                "rule_type": "non_aggregate",
                 "dimension": "completeness",
+                "is_active": 1,
+                "slo": "gt(90)"
+            },
+            {
+                "rule_specification": "Uniqueness Check",
+                "rule_name": "patient_id_uniqueness",
+                "rule": "uniqueness",
+                "rule_type": "aggregate",
+                "dimension": "uniqueness",
                 "is_active": 1,
                 "slo": "gt(90)"
             }
@@ -113,7 +123,7 @@ if __name__ == "__main__":
     for element, rules_list in rules.items():
         if element in rule_elements:
             for rule in rules_list:
-                if rule["is_active"] == 1:
+                if rule["is_active"] == 1 and rule["rule_type"] == "non_aggregate":
                     current_df = partitioned_survey_df.select(test_list).withColumn("rule_applied_on", lit(element)) \
                         .withColumn("source", lit(dq_rule['source'])) \
                         .withColumn("entity", lit(dq_rule['entity'])) \
@@ -140,6 +150,16 @@ if __name__ == "__main__":
                     else:
                         results_df = results_df.union(current_df)
                         metrics_df = metrics_df.union(current_metrics_df)
+                elif rule["is_active"] == 1 and rule["rule_type"] == "aggregate":
+                    agg_metrics_df = partitioned_survey_df.agg(
+                        sumDistinct(element).alias('distinct'),
+                        pyspark.sql.functions.count('*').alias('count')
+                    ).withColumn('percentage', round(col("distinct")/col("count") * 100, 2))
+                    if count == 0:
+                        metrics_df = agg_metrics_df
+                        count += 1
+                    else:
+                        metrics_df = metrics_df.union(agg_metrics_df)
 
     results_df.show(100, truncate=False)
     metrics_df.show(truncate=False)

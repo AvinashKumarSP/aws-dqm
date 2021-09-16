@@ -31,6 +31,19 @@ def ge(n):
 def le(n):
     return lambda x: x <= n
 
+import datetime
+date_string = '2017-12-31'
+date_format = '%Y-%m-%d'
+
+
+def format_check(date_col, format_str):
+    try:
+        date_obj = datetime.datetime.strptime(str(date_col), format_str)
+        True
+    except ValueError:
+        False
+
+
 
 if __name__ == "__main__":
     conf = get_spark_app_config()
@@ -44,6 +57,7 @@ if __name__ == "__main__":
         .getOrCreate()
 
     logger = Log4j(spark)
+    spark.udf.register("format_check", format_check)
 
     if len(sys.argv) != 2:
         logger.error("Usage: HelloSpark <filename>")
@@ -55,9 +69,14 @@ if __name__ == "__main__":
     partitioned_survey_df = survey_raw_df.repartition(2)
     partitioned_survey_df.show()
     rule = "isnull(patient_id)"
-    test_list = ["patient_id", "Country"]
-    rule_df = partitioned_survey_df.select(test_list).withColumn("length_of_country_id_gt_0",
-                                                                 expr("Country in('United States','United Kingdom')"))
+    test_list = ["patient_id", "country", "Timestamp"]
+    expr_rlike="col('Timestamp').rlike('^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})$')"
+    expr_rlike1="expr(\"country in ('United Kingdom', 'United States')\")"
+    rule_df = partitioned_survey_df.select(test_list)\
+        .withColumn("date_format1", eval(expr_rlike))\
+        .withColumn("date_fromat", col('Timestamp').rlike('^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})$'))\
+        .withColumn("country_has", eval(expr_rlike1))
+
     rule_df.show()
 
     new_req_rules_df = partitioned_survey_df.select(test_list)
