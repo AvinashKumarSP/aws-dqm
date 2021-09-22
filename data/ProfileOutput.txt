@@ -1,0 +1,25 @@
+tech_company StandardProfiles for column: tech_company: {
+    "completeness": 1.0,
+    "approximateNumDistinctValues": 2,
+    "dataType": "String",
+    "isDataTypeInferred": false,
+    "typeCounts": {
+        "Boolean": 0,
+        "Fractional": 0,
+        "Integral": 0,
+        "Unknown": 0,
+        "String": 9
+    },
+    "histogram": [
+        [
+            "No",
+            1,
+            0.1111111111111111
+        ],
+        [
+            "Yes",
+            8,
+            0.8888888888888888
+        ]
+    ]
+}
