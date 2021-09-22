@@ -23,3 +23,29 @@ tech_company StandardProfiles for column: tech_company: {
         ]
     ]
 }
+
+
+    "completeness": 1.0,
+    "approximateNumDistinctValues": 2,
+    "dataType": "Integral",
+    "isDataTypeInferred": false,
+    "typeCounts": {},
+    "histogram": [
+        [
+            "11",
+            1,
+            0.1111111111111111
+        ],
+        [
+            "10",
+            8,
+            0.8888888888888888
+        ]
+    ],
+    "kll": "None",
+    "mean": 10.11111111111111,
+    "maximum": 11.0,
+    "minimum": 10.0,
+    "sum": 91.0,
+    "stdDev": 0.31426968052735454,
+    "approxPercentiles": []
