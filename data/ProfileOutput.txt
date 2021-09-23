@@ -89,3 +89,17 @@ tech_company StandardProfiles for column: tech_company: {
 |Patient Data Check |Error      |Error       |ComplianceConstraint(Compliance(country contained in United States,United Kingdom,`country` IS NULL OR `country` IN ('United States','United Kingdom'),None))|Failure          |Value: 0.6666666666666666 does not meet the constraint requirement!                             |nhs   |patient_data|
 |Patient Data Check1|Warning    |Warning     |ComplianceConstraint(Compliance(country contained in United States,United Kingdom,`country` IS NULL OR `country` IN ('United States','United Kingdom'),None))|Failure          |Value: 0.6666666666666666 does not meet the constraint requirement!                             |nhs   |patient_data|
 +-------------------+-----------+------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------+-----------------+------------------------------------------------------------------------------------------------+------+------------+
+
++-------------------+-----------+------------+--------------------+-----------------+--------------------+------+------------+
+|              check|check_level|check_status|          constraint|constraint_status|  constraint_message|source|      entity|
++-------------------+-----------+------------+--------------------+-----------------+--------------------+------+------------+
+| Patient Data Check|      Error|       Error|SizeConstraint(Si...|          Failure|Value: 9 does not...|   nhs|patient_data|
+| Patient Data Check|      Error|       Error|CompletenessConst...|          Failure|Value: 0.88888888...|   nhs|patient_data|
+| Patient Data Check|      Error|       Error|SizeConstraint(Si...|          Success|                    |   nhs|patient_data|
+| Patient Data Check|      Error|       Error|UniquenessConstra...|          Failure|Value: 0.5 does n...|   nhs|patient_data|
+| Patient Data Check|      Error|       Error|CompletenessConst...|          Success|                    |   nhs|patient_data|
+| Patient Data Check|      Error|       Error|CompletenessConst...|          Failure|Value: 0.88888888...|   nhs|patient_data|
+| Patient Data Check|      Error|       Error|ComplianceConstra...|          Failure|Value: 0.66666666...|   nhs|patient_data|
+| Patient Data Check|      Error|       Error|ComplianceConstra...|          Failure|Value: 0.66666666...|   nhs|patient_data|
+|Patient Data Check1|    Warning|     Warning|ComplianceConstra...|          Failure|Value: 0.66666666...|   nhs|patient_data|
++-------------------+-----------+------------+--------------------+-----------------+--------------------+------+------------+
