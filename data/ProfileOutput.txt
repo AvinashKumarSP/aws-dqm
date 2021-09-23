@@ -49,3 +49,28 @@ tech_company StandardProfiles for column: tech_company: {
     "sum": 91.0,
     "stdDev": 0.31426968052735454,
     "approxPercentiles": []
+
+
+ -------+-----------------------+---------------------------------------+------------------+------------+------+
+ |entity |instance               |name                                   |value             |db_entity   |source|
+ +-------+-----------------------+---------------------------------------+------------------+------------+------+
+ |Column |patient_id             |Distinctness                           |0.625             |patient_data|nhs   |
+ |Column |patient_id             |Uniqueness                             |0.5               |patient_data|nhs   |
+ |Column |patient_id_completeness|Compliance                             |0.8888888888888888|patient_data|nhs   |
+ |Column |patient_id             |Histogram.bins                         |6.0               |patient_data|nhs   |
+ |Column |patient_id             |Histogram.abs.10903                    |1.0               |patient_data|nhs   |
+ |Column |patient_id             |Histogram.ratio.10903                  |0.1111111111111111|patient_data|nhs   |
+ |Column |patient_id             |Histogram.abs.10902                    |1.0               |patient_data|nhs   |
+ |Column |patient_id             |Histogram.ratio.10902                  |0.1111111111111111|patient_data|nhs   |
+ |Column |patient_id             |Histogram.abs.NullValue                |1.0               |patient_data|nhs   |
+ |Column |patient_id             |Histogram.ratio.NullValue              |0.1111111111111111|patient_data|nhs   |
+ |Column |patient_id             |Histogram.abs.19828                    |1.0               |patient_data|nhs   |
+ |Column |patient_id             |Histogram.ratio.19828                  |0.1111111111111111|patient_data|nhs   |
+ |Column |patient_id             |Histogram.abs.10901                    |1.0               |patient_data|nhs   |
+ |Column |patient_id             |Histogram.ratio.10901                  |0.1111111111111111|patient_data|nhs   |
+ |Column |patient_id             |Histogram.abs.10907                    |4.0               |patient_data|nhs   |
+ |Column |patient_id             |Histogram.ratio.10907                  |0.4444444444444444|patient_data|nhs   |
+ |Column |country_validity       |Compliance                             |0.6666666666666666|patient_data|nhs   |
+ |Column |patient_id             |Completeness (where: country = 'JERSY')|0.0               |patient_data|nhs   |
+ |Dataset|*                      |Size                                   |9.0               |patient_data|nhs   |
+ +-------+-----------------------+---------------------------------------+------------------+------------+------+
